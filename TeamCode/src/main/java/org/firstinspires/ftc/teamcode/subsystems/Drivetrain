@@ -14,12 +14,13 @@ import static org.firstinspires.ftc.teamcode.pedroPathing.Constants.followerCons
 public class Drivetrain {
     private FilteredPIDFController xPid, yPid;
     private PIDFController headingPid;
+
     private Follower follower;
     private Gamepad gamepad1;
 
     public Pose position;
-
     public Pose drivePower;
+    public Pose velocity;
 
     public final Pose RED_GOAL = new Pose(144, 144, 0);
     public final Pose BLUE_GOAL = new Pose(0, 144, 0);
@@ -30,18 +31,22 @@ public class Drivetrain {
      * @param follower  A PedroPathing Follower object
      * @param startingPose  The robot's starting Pose, in inches
      */
-    public Drivetrain(Gamepad gamepad1, Follower follower, Pose startingPose) {
+    public Drivetrain(Gamepad gamepad1, HardwareMap hardwareMap, Pose startingPose) {
         this.gamepad1 = gamepad1;
-        this.follower = follower;
+        this.follower = Constants.createFollower(hardwareMap);
         follower.setStartingPose(startingPose);
         follower.update();
 
-        headingPid = new PIDFController(followerConstants.coefficientsHeadingPIDF);
         xPid = new FilteredPIDFController(followerConstants.coefficientsDrivePIDF);
         yPid = new FilteredPIDFController(followerConstants.coefficientsDrivePIDF);
+        headingPid = new PIDFController(followerConstants.coefficientsHeadingPIDF);
 
-        position = Constants.startingPos;
+        position = startingPose;
         drivePower = new Pose();
+
+        for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
+            module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        }
     }
 
     /**
@@ -159,6 +164,8 @@ public class Drivetrain {
     public void update() {
         follower.update();
         position = follower.getPose();
+        velocity = follower.getVelocity();
+
         xPid.updatePosition(position.getX());
         yPid.updatePosition(position.getY());
         headingPid.updatePosition(position.getHeading());

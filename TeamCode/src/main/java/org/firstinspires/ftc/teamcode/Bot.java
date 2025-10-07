@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.util.DataLogger;
 
 public class Bot {
     public Gamepad gamepad1;
@@ -15,16 +16,25 @@ public class Bot {
     public Drivetrain dt;
     public Intake intake;
     public Follower follower;
-    private final Pose startPose = new Pose(9,9,0);
+    public DataLogger logs;
 
     /**
-     * Constructs a new Bot, consisting of a Pedro Follower, Intake, Drivetrain and Gamepad
+     * Constructs a new Bot, consisting of a Pedro Follower, Intake, Drivetrain, DataLogger and Gamepad
      * @param gamepad1  takes `gamepad1` or `gamepad2`
      * @param hardwareMap   takes `hardwareMap`
      */
     public Bot (Gamepad gamepad1, HardwareMap hardwareMap) {
         follower = Constants.createFollower(hardwareMap);
         follower.setStartingPose(startPose);
+
+        logs = new DataLogger("testLog1");
+
+        logs.addField("Time");
+        logs.addField("d ms");
+        logs.addField("Bot X");
+        logs.addField("Bot Y");
+        logs.addField("Bot Heading");
+        logs.firstLine();
 
         intake = new Intake(hardwareMap);
 
@@ -54,5 +64,13 @@ public class Bot {
         else if (gamepad1.x) {
             intake.reject();
         }
+    }
+
+    public void log() {
+        logs.addField(dt.position.getX());
+        logs.addField(dt.position.getY());
+        logs.addField(dt.position.getHeading());
+
+        logs.newLine();
     }
 }

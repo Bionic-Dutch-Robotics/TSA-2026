@@ -11,6 +11,11 @@ public class TeleKorver extends OpMode {
     @Override
     public void init () {
         bot = new Bot(gamepad1, hardwareMap);
+
+        List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
+        for (LynxModule hub : allHubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        }
     }
 
     @Override
@@ -22,5 +27,6 @@ public class TeleKorver extends OpMode {
     public void loop () {
         bot.drivetrain();
         bot.intake();
+        bot.log();
     }
 }
