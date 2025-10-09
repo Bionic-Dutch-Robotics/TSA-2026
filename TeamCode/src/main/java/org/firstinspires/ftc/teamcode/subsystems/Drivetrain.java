@@ -17,7 +17,7 @@ import static org.firstinspires.ftc.teamcode.pedroPathing.Constants.followerCons
 public class Drivetrain {
     private FilteredPIDFController xPid, yPid;
     private PIDFController headingPid;
-    private Follower follower;
+    public Follower follower;
     private Gamepad gamepad1;
 
     public Pose position;

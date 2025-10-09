@@ -24,11 +24,8 @@ public class Bot {
      * @param hardwareMap   takes `hardwareMap`
      */
     public Bot (Gamepad gamepad1, HardwareMap hardwareMap) {
-        follower = Constants.createFollower(hardwareMap);
-        follower.setStartingPose(Constants.startPose);
 
         logs = new DataLogger("testLog1");
-
         logs.addField("Bot X");
         logs.addField("Bot Y");
         logs.addField("Bot Heading");
@@ -64,11 +61,13 @@ public class Bot {
         }
     }
 
+    /**
+     * Add robot debugging logs for later review
+     */
     public void log() {
         logs.addField(dt.position.getX());
         logs.addField(dt.position.getY());
         logs.addField(dt.position.getHeading());
-
         logs.newLine();
     }
 }
