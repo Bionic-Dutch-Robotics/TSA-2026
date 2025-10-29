@@ -126,8 +126,7 @@ drivePower.getHeading());
                                double driveCoefficient, boolean isAutoOrienting, Pose orbitTarget,
                                @NonNull Gamepad gamepad) {
         // TODO: Remove vector inputs, rely on gamepad. Testing needed.
-        if (!isAutoOrienting)
-        {
+        if (!isAutoOrienting) {
             follower.setTeleOpDrive(
                     (forwardPower * driveCoefficient),
                     (strafePower * driveCoefficient),
