@@ -10,13 +10,13 @@ import java.util.List;
 @SuppressWarnings("all")
 @TeleOp (name="TeleKorver")
 public class TeleKorver extends OpMode {
-    private Bot bot;
+    private FirstMeetBot bot;
     private Pose drivePower;
 
     @Override
     public void init () {
         try {
-            bot = new Bot(gamepad1, hardwareMap);
+            bot = new FirstMeetBot(gamepad1, hardwareMap);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
