@@ -14,7 +14,7 @@ public class Intake {
     public Intake (HardwareMap hardwareMap) {
         spinner = hardwareMap.get(DcMotorEx.class, "intake");
         spinner.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-        spinner.setDirection(DcMotorEx.Direction.FORWARD);
+        spinner.setDirection(DcMotorEx.Direction.REVERSE);
         spinner.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
@@ -30,5 +30,9 @@ public class Intake {
      */
     public void eject() {
         spinner.setPower(-0.75);
+    }
+
+    public void stop() {
+        spinner.setPower(0);
     }
 }
