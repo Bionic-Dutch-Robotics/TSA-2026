@@ -29,7 +29,6 @@ public class FinalAuto extends OpMode {
 
     @Override
     public void loop() {
-        bot.fw.update();
         if (shots == 4) {
             if (timer.getElapsedTimeSeconds() > 1) {
                 bot.fw.breakFollowing();

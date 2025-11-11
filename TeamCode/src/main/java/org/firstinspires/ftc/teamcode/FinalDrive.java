@@ -19,6 +19,9 @@ public class FinalDrive extends OpMode {
         bot.shooter(gamepad2);
 
         telemetry.addData("Shoot: ", BOTT.shotPos.name());
+        telemetry.addData("BotX:", bot.fw.getPose().getX());
+        telemetry.addData("BotY", bot.fw.getPose().getY());
+        telemetry.addData("BotTheta", bot.fw.getPose().getHeading());
         telemetry.update();
     }
 }

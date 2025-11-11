@@ -1,13 +1,19 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.paths.HeadingInterpolator;
+import com.pedropathing.paths.Path;
+import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter;
+
+import java.util.function.Supplier;
 
 public class BOTT {
 
@@ -16,17 +22,19 @@ public class BOTT {
         CLOSE,
         EJECT
     }
-    Follower fw;
-    Intake intake;
+    public Follower fw;
+    public Intake intake;
     public static ShotPos shotPos;
     boolean runIntake;
     Shooter shooter;
     boolean runShooter;
     double forwardPower, strafePower, turnPower;
+    private boolean goTo;
+    private Supplier<PathChain> pathChain;
     public BOTT(HardwareMap hwMap) {
         fw = Constants.createFollower(hwMap);
         fw.setStartingPose(
-                new Pose(0,0,0)
+                new Pose(8,8,Math.PI/2)
         );
 
         intake = new Intake(hwMap);
@@ -38,33 +46,59 @@ public class BOTT {
         runShooter = false;
 
         shotPos = ShotPos.FAR;
+
+        pathChain = () -> fw.pathBuilder() //Lazy Curve Generation
+                .addPath(new Path(new BezierLine(fw::getPose, new Pose(72,72,Math.PI/2))))
+                .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(fw::getHeading, Math.toRadians(45), 0.8))
+                .build();
+
+        goTo = false;
     }
 
     public void drivetrain(Gamepad gp) {
         fw.update();
 
-        forwardPower = -gp.left_stick_y;
-        if (Math.abs(forwardPower) < 0.05) {
-            forwardPower = 0;
+        if (!goTo) {
+            forwardPower = -gp.left_stick_y;
+            if (Math.abs(forwardPower) < 0.05) {
+                forwardPower = 0;
+            }
+
+            strafePower = gp.left_stick_x;
+            if (Math.abs(strafePower) < 0.05) {
+                strafePower = 0;
+            }
+
+            turnPower = gp.right_stick_x;
+            if (Math.abs(turnPower) < 0.05) {
+                turnPower = 0;
+            }
+
+
+            fw.setTeleOpDrive(
+                    forwardPower,
+                    strafePower,
+                    turnPower,
+                    true
+            );
+        }
+        else {
+            //fw.followPath(pathChain.get());
         }
 
-        strafePower = gp.left_stick_x;
-        if (Math.abs(strafePower) < 0.05) {
-            strafePower = 0;
+        if (gp.aWasPressed()) {
+            if (goTo) {
+                fw.breakFollowing();
+                fw.startTeleopDrive(true);
+            }
+            else {
+
+                fw.followPath(pathChain.get());
+            }
+
+            goTo = !goTo;
+
         }
-
-        turnPower = gp.right_stick_x;
-        if (Math.abs(turnPower) < 0.05) {
-            turnPower = 0;
-        }
-
-
-        fw.setTeleOpDrive(
-                forwardPower,
-                -strafePower,
-                -turnPower,
-                true
-        );
     }
 
     public void intake(Gamepad gp) {
@@ -97,15 +131,15 @@ public class BOTT {
         }
 
         if (runShooter) {
-            shooter.lob();
+            //shooter.lob();
             shotPos = ShotPos.FAR;
         }
         else if (gp.x) {
-            shooter.eject();
+            //shooter.eject();
             shotPos = ShotPos.EJECT;
         }
         else {
-            shooter.idle();
+            //shooter.idle();
             shotPos = ShotPos.CLOSE;
         }
     }
