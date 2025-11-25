@@ -40,8 +40,8 @@ public class BOTT {
 
 
         pathChain = () -> fw.pathBuilder() //Lazy Curve Generation
-                .addPath(new Path(new BezierLine(fw::getPose, Settings.Positions.Drivetrain.MIDFIELD_SHOOT)))
-                .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(fw::getHeading, Settings.Positions.Drivetrain.MIDFIELD_SHOOT.getHeading(), 0.8))
+                .addPath(new Path(new BezierLine(fw::getPose, Settings.Positions.Drivetrain.Red.MIDFIELD_SHOOT)))
+                .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(fw::getHeading, Settings.Positions.Drivetrain.Red.MIDFIELD_SHOOT.getHeading(), 0.8))
                 .build();
 
         goTo = false;

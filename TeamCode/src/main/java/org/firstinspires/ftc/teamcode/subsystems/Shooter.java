@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import org.firstinspires.ftc.teamcode.util.Settings.Positions;
 import org.firstinspires.ftc.teamcode.util.Settings.HardwareNames;
+
+import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.control.PIDFCoefficients;
 import com.pedropathing.control.PIDFController;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,6 +12,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
+@Configurable
 public class Shooter {
     public PIDFController shooterPidf = null;
     public DcMotorEx shooter = null;
@@ -35,20 +38,22 @@ public class Shooter {
     }
     public void idle() {
         this.start();
-        shooter.setPower(0.25);
+        shooter.setPower(0.15);
         shooterState = ShooterState.IDLE;
     }
 
     public void shootFar() {
+        update();
         this.setTargetVelocity(Positions.Shooter.FAR_VELOCITY);
         shooterState = ShooterState.FAR;
     }
     public void shootClose() {
+        update();
         this.setTargetVelocity(Positions.Shooter.MIDFIELD_VELOCITY);
         shooterState = ShooterState.MIDFIELD;
     }
 
-    public void setTargetVelocity(double velocity) {
+    private void setTargetVelocity(double velocity) {
         this.start();
         shooterPidf.setTargetPosition(velocity);
     }
