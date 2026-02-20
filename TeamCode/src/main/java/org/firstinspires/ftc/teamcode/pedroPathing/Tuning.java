@@ -110,7 +110,7 @@ public class Tuning extends SelectableOpMode {
     }
 
     /** This creates a full stop of the robot by setting the drive motors to run at 0 power. */
-    public static void stopRobot() {
+    public static void stopRobot(Follower follower) {
         follower.startTeleopDrive(true);
         follower.setTeleOpDrive(0,0,0,true);
     }
@@ -365,7 +365,7 @@ class ForwardVelocityTuner extends OpMode {
     @Override
     public void loop() {
         if (gamepad1.bWasPressed()) {
-            stopRobot();
+            stopRobot(follower);
             requestOpModeStop();
         }
 
@@ -376,7 +376,7 @@ class ForwardVelocityTuner extends OpMode {
         if (!end) {
             if (Math.abs(follower.getPose().getX()) > DISTANCE) {
                 end = true;
-                stopRobot();
+                stopRobot(follower);
             } else {
                 follower.setTeleOpDrive(1,0,0,true);
                 //double currentVelocity = Math.abs(follower.getVelocity().getXComponent());
@@ -385,7 +385,7 @@ class ForwardVelocityTuner extends OpMode {
                 velocities.remove(0);
             }
         } else {
-            stopRobot();
+            stopRobot(follower);
             double average = 0;
             for (double velocity : velocities) {
                 average += velocity;
@@ -472,7 +472,7 @@ class LateralVelocityTuner extends OpMode {
     @Override
     public void loop() {
         if (gamepad1.bWasPressed()) {
-            stopRobot();
+            stopRobot(follower);
             requestOpModeStop();
         }
 
@@ -482,7 +482,7 @@ class LateralVelocityTuner extends OpMode {
         if (!end) {
             if (Math.abs(follower.getPose().getY()) > DISTANCE) {
                 end = true;
-                stopRobot();
+                stopRobot(follower);
             } else {
                 follower.setTeleOpDrive(0,1,0,true);
                 double currentVelocity = Math.abs(follower.getVelocity().dot(new Vector(1, Math.PI / 2)));
@@ -490,7 +490,7 @@ class LateralVelocityTuner extends OpMode {
                 velocities.remove(0);
             }
         } else {
-            stopRobot();
+            stopRobot(follower);
             double average = 0;
             for (double velocity : velocities) {
                 average += velocity;
@@ -569,7 +569,7 @@ class ForwardZeroPowerAccelerationTuner extends OpMode {
     @Override
     public void loop() {
         if (gamepad1.bWasPressed()) {
-            stopRobot();
+            stopRobot(follower);
             requestOpModeStop();
         }
 
@@ -671,7 +671,7 @@ class LateralZeroPowerAccelerationTuner extends OpMode {
     @Override
     public void loop() {
         if (gamepad1.bWasPressed()) {
-            stopRobot();
+            stopRobot(follower);
             requestOpModeStop();
         }
 
